@@ -1,0 +1,307 @@
+--- 
+title: "Dashboard_Carrera Luz"
+subtile: "Actividad 1 - Métodos y Simulación Estadística"
+output: 
+  flexdashboard::flex_dashboard:
+    theme:
+      bg: "#101010"
+      fg: "#FDF7F7" 
+      primary: "#ED79F9"
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+#Install thematic and un-comment for themed static plots (i.e., ggplot2)
+#thematic::thematic_rmd()
+library(ggplot2)
+library(paqueteMET)
+
+data("CarreraLuz22")
+
+
+  
+
+CarreraLuz22$sex[CarreraLuz22$sex == "M"]="Hombre"
+CarreraLuz22$sex[CarreraLuz22$sex == "F"]="Mujer"
+
+CarreraLuz22M = subset(CarreraLuz22, CarreraLuz22$sex=="Hombre")
+CarreraLuz22F = subset(CarreraLuz22, CarreraLuz22$sex=="Mujer")
+
+
+CarreraLuz22_c1M = subset(CarreraLuz22M, CarreraLuz22M$categoria=="1. Juvenil")
+CarreraLuz22_c2M = subset(CarreraLuz22M, CarreraLuz22M$categoria=="2. Abierta")
+CarreraLuz22_c3M = subset(CarreraLuz22M, CarreraLuz22M$categoria=="3. Veteranos A")
+CarreraLuz22_c4M = subset(CarreraLuz22M, CarreraLuz22M$categoria=="4. Veteranos B")
+CarreraLuz22_c5M = subset(CarreraLuz22M, CarreraLuz22M$categoria=="5. Veteranos C")
+
+
+CarreraLuz22_c1F = subset(CarreraLuz22F, CarreraLuz22F$categoria=="1. Juvenil")
+CarreraLuz22_c2F = subset(CarreraLuz22F, CarreraLuz22F$categoria=="2. Abierta")
+CarreraLuz22_c3F = subset(CarreraLuz22F, CarreraLuz22F$categoria=="3. Veteranos A")
+CarreraLuz22_c4F = subset(CarreraLuz22F, CarreraLuz22F$categoria=="4. Veteranos B")
+CarreraLuz22_c5F = subset(CarreraLuz22F, CarreraLuz22F$categoria=="5. Veteranos C")
+
+
+CarreraLuz22A = subset(CarreraLuz22, CarreraLuz22$categoria =="2. Abierta")
+
+CarreraLuz22VA = subset(CarreraLuz22, CarreraLuz22$categoria=="3. Veteranos A")
+
+CarreraLuz22VB = subset(CarreraLuz22, CarreraLuz22$categoria== "4. Veteranos B")
+
+CarreraLuz22VC = subset(CarreraLuz22, CarreraLuz22$categoria=="5. Veteranos C")
+
+CarreraLuz22J = subset(CarreraLuz22, CarreraLuz22$categoria=="1. Juvenil")
+
+```
+# Participantes{.value-box}
+
+### Participantes totales {.value-box}
+
+```{r}
+valueBox(value = paste(round(nrow(CarreraLuz22),2)," Total Participantes"), 
+         caption = "Total Participantes", 
+         icon = "fa-people", 
+         color = "#66CDAA")
+```
+
+### Participantes hombres {.value-box}
+
+```{r}
+valueBox(value = paste(round(nrow(CarreraLuz22M),2),"Total hombres"), 
+         caption = "Total hombres", 
+         icon = "fa-people", 
+         color = "#00008B")
+```
+
+### Participantes mujeres {.value-box}
+
+```{r}
+valueBox(value = paste(round(nrow(CarreraLuz22F),2),"Total mujeres"), 
+         caption = "Total mujeres", 
+         icon = "fa-people", 
+         color = "#CD1076")
+```
+
+# Categorias {.value-box}
+
+```{r, fig.height=3}
+ggplot(CarreraLuz22, aes(x = categoria, y = timerun/60 )) +
+  geom_boxplot(aes(fill = categoria)) + 
+  # facet_wrap(~sex, ncol=1, labeller = labeller(dose = etiquetas))+
+  labs(title = "Tiempo por categorias", y= "tiempo - min", x= "categorías")+
+  scale_fill_brewer() +
+  #scale_fill_manual(values = c("#00070D", "#012447", "#034A94", "#0570E1", "#3998FB","#37B6FC"))+
+  theme(legend.position = "none")
+```
+
+## Categoria Mujeres {data-width=350}
+
+```{r, fig.height=3}
+ggplot(CarreraLuz22F, aes(x = categoria, y = timerun/60 )) +
+  geom_boxplot(aes(fill = categoria)) + 
+  # facet_wrap(~sex, ncol=1, labeller = labeller(dose = etiquetas))+
+  labs(title = "Tiempo por categoria mujeres", y= "tiempo - min", x= "categorías")+
+  scale_fill_brewer() +
+  #scale_fill_manual(values = c("#00070D", "#012447", "#034A94", "#0570E1", "#3998FB","#37B6FC"))+
+  theme(legend.position = "none")
+```
+
+## Categoria Hombres {data-width=350}
+
+```{r, fig.height=3}
+ggplot(CarreraLuz22M, aes(x = categoria, y = timerun/60 )) +
+  geom_boxplot(aes(fill = categoria)) + 
+  # facet_wrap(~sex, ncol=1, labeller = labeller(dose = etiquetas))+
+  labs(title = "Tiempo por categoria hombres", y= "tiempo - min", x= "categorías")+
+  scale_fill_brewer() +
+  #scale_fill_manual(values = c("#00070D", "#012447", "#034A94", "#0570E1", "#3998FB","#37B6FC"))+
+  theme(legend.position = "none")
+```
+
+# Mejores tiempos en carrera {.value-box}
+
+### Mejor tiempo hombres {.value-box}
+
+```{r, fig.height=3}
+valueBox(value =paste(round(min(CarreraLuz22M$timerun/60),1), "min"), 
+         caption = "Tiempo ganador hombres", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Mejor tiempo Mujeres {.value-box}
+
+```{r}
+
+valueBox(value =paste(round(min(CarreraLuz22F$timerun/60),1), "min"), 
+         caption = "Tiempo ganador mujeres", 
+         icon = "fa-thumbs-up", 
+         color = "#FFC0CB")
+```
+
+#Tiempos ganadores por categoria {.value-box}
+
+### Mejor tiempo Cat Abierta {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22A$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria abierta", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Tiempo Cat Abierta por genero {.value-box}
+
+```{r, fig.height=3}
+ggplot(CarreraLuz22A, aes(x = sex, y = timerun/60 )) +
+  geom_boxplot(aes(fill = sex)) + 
+  # facet_wrap(~sex, ncol=1, labeller = labeller(dose = etiquetas))+
+  labs(title = "Tiempo por genero Cat. Abierta", y= "tiempo - min", x= "genero")+
+  scale_fill_brewer() +
+  #scale_fill_manual(values = c("#00070D", "#012447", "#034A94", "#0570E1", "#3998FB","#37B6FC"))+
+  theme(legend.position = "none")
+```
+
+### Mejor tiempo Cat Abierta hombre {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c2M$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria abierta hombres", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Mejor tiempo Cat Abierta mujeres {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c2F$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria abierta mujeres", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Mejor tiempo Cat Juvenil {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22J$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria juvenil", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Tiempo Cat juvenil por genero {.value-box}
+
+```{r, fig.height=3}
+ggplot(CarreraLuz22J, aes(x = sex, y = timerun/60 )) +
+  geom_boxplot(aes(fill = sex)) + 
+  # facet_wrap(~sex, ncol=1, labeller = labeller(dose = etiquetas))+
+  labs(title = "Tiempo por genero Cat. Juvenil", y= "tiempo - min", x= "genero")+
+  scale_fill_brewer() +
+  #scale_fill_manual(values = c("#00070D", "#012447", "#034A94", "#0570E1", "#3998FB","#37B6FC"))+
+  theme(legend.position = "none")
+```
+
+### Mejor tiempo Cat Juvenil hombres {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c1M$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria juvenil hombres", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Mejor tiempo Cat Juvenil mujeres {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c1F$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria juvenil mujeres", 
+         icon = "fa-thumbs-up", 
+         color = "#FFB5C5")
+```
+
+### Mejor tiempo Cat Veteranos A {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22VA$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria Vet A", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Mejor tiempo Cat Veteranos A hombres {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c3M$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria juvenil mujeres", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Mejor tiempo Cat veteranos A mujeres {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c3F$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria juvenil mujeres", 
+         icon = "fa-thumbs-up", 
+         color = "#FFB5C5")
+```
+
+### Mejor tiempo Cat Veteranos B {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22VB$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria Vet B", 
+         icon = "fa-thumbs-up", 
+         color = "#7FFFD4")
+```
+
+### Mejor tiempo Cat Vet B hombres {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c4M$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria Vet B hombres", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Mejor tiempo Cat Vet B mujeres {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c4F$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria Vet B mujeres", 
+         icon = "fa-thumbs-up", 
+         color = "#FFB5C5")
+```
+
+### Mejor tiempo Cat Veteranos C {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22VC$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria Vet A", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Mejor tiempo Cat Vet C hombres {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c5M$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria Vet C hombres", 
+         icon = "fa-thumbs-up", 
+         color = "#0EB0C6")
+```
+
+### Mejor tiempo Cat Vet C mujeres {.value-box}
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22_c5F$timerun/60),1), "min"), 
+         caption = "Tiempo ganador categoria Vet C mujeres", 
+         icon = "fa-thumbs-up", 
+         color = "#FFB5C5")
+```
